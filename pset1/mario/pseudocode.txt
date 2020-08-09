@@ -1,0 +1,4 @@
+1. Get height from user, store in h
+2. If h < 1 or h > 8 or h not int, go back to step 1.
+3. Run a for loop over height from 1 till h:
+    1. For iteration i, print i hashes + newline

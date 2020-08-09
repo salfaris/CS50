@@ -1,0 +1,9 @@
+1. Check that the program was run with one command-line argument
+2. Iterate over the provided argument to make sure all characters are digits
+3. Convert that command-line argument from a string to an int
+4. Prompt user for plaintext
+5. Iterate over each character of the plaintext:
+    1. If it is an uppercase letter, rotate it, preserving case, then print out the rotated character
+    2. If it is a lowercase letter, rotate it, preserving case, then print out the rotated character
+    3. If it is neither, print out the character as is
+6. Print a newline

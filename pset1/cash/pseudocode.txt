@@ -1,0 +1,12 @@
+Step-by-step cash.c
+
+1. Prompt user for an amount of change in dollars
+    1. If prompt non-negative float, go back to step 1.
+
+2. Multiple change by 100
+3. Round change to nearest penny
+
+4. Keep track of remaining change owed.
+5. Keep track of how many coins used.
+6. Print the number of coins (an int)
+s
