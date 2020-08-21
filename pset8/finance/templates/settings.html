@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <div>
+        <h3 style="text-align: center; padding-bottom: 10px;">Settings</h3>
+    </div>
+    <div style="display: inline-block; text-align: left;">
+        <p>Username: {{ username }}</p>
+        <p>Password: <a href="/verify">Change password</a></p>
+        <p>Total buy transactions: {{ buys }}</p>
+        <p>Total sell transactions: {{ sells }}</p>
+    </div>
+{% endblock %}

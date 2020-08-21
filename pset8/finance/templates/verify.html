@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/verify" method="post" name="reg-form">
+        <div class="small text-muted" style="padding-bottom: 10px;">
+            Verification: key in your original password below
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" id="password" placeholder="Original password" type="password">
+        </div>
+        <button class="btn btn-primary" id="submit" type="submit">Submit</button>
+    </form>
+{% endblock %}
