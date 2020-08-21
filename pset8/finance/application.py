@@ -99,6 +99,24 @@ def index():
 
     return render_template("index.html", cash=usd(current_cash), data=stock_data, total_value=usd(total_value), total=usd(grand_total))
 
+@app.route("/settings")
+@login_required
+def settings():
+    """Adjust settings of user"""
+
+    # Gets user's username
+    temp = db.execute("SELECT username FROM users WHERE id = :user_id", user_id=session["user_id"])
+    username = temp[0]["username"]
+
+    # Gets user's buy transactions
+    temp = db.execute("SELECT COUNT(*) FROM transactions WHERE user_id = :user_id AND buy = 1", user_id=session["user_id"])
+    buys = temp[0]["COUNT(*)"]
+
+    # Gets user's sell transactions
+    temp = db.execute("SELECT COUNT(*) FROM transactions WHERE user_id = :user_id AND buy = 0", user_id=session["user_id"])
+    sells = temp[0]["COUNT(*)"]
+
+    return render_template("settings.html", username=username, buys=buys, sells=sells)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -282,6 +300,34 @@ def quote():
     else:
         return render_template("quote.html")
 
+@app.route("/deposit", methods=["GET", "POST"])
+@login_required
+def deposit():
+    """Deposit some cash."""
+
+    # User reached route via POST
+    if request.method == "POST":
+        # Get amount to be deposited
+        deposit = float(request.form.get("deposit"))
+
+        # Query for user's current cash
+        temp = db.execute("SELECT * FROM users WHERE id = :user_id", user_id=session["user_id"])
+        current_cash = temp[0]["cash"]
+
+        # Update cash in memory
+        current_cash += deposit
+
+        # Update cash in database
+        db.execute("UPDATE users SET cash = :current_cash WHERE id = :user_id",
+                   current_cash=current_cash,
+                   user_id=session["user_id"])
+
+        return redirect("/")
+
+    # User reached route via GET
+    else:
+        return render_template("deposit.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -291,6 +337,8 @@ def register():
 
     # User reached route via POST (submitting register)
     if request.method == "POST":
+
+        # Get username and password
         username = request.form.get("username")
         password = request.form.get("password")
 
@@ -332,6 +380,57 @@ def register():
     else:
         return render_template("register.html")
 
+@app.route("/verify", methods=["GET", "POST"])
+@login_required
+def verify():
+    """Verifies user that wants to change password"""
+
+    # User reached route via POST (submitting register)
+    if request.method == "POST":
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE id = :user_id",
+                          user_id=session["user_id"])
+
+        # Ensure password is correct
+        if not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            return apology("password is incorrect", 403)
+
+        return redirect("/reset")
+
+    # User reached route via GET (get to registration page)
+    else:
+        return render_template("verify.html")
+
+@app.route("/reset", methods=["GET", "POST"])
+@login_required
+def reset():
+    """Allows user to change password"""
+
+    # User reached route via POST (submitting register)
+    if request.method == "POST":
+
+        # Get password
+        password = request.form.get("password")
+
+        # Ensure password was submitted
+        if not password:
+            return apology("must provide password", 403)
+
+        # Ensure password and password confirmation is the same
+        elif password != request.form.get("confirmation"):
+            return apology("passwords don't match", 403)
+
+        # Update new password
+        db.execute("UPDATE users SET hash = :new_hash WHERE id = :user_id",
+                   new_hash=generate_password_hash(password),
+                   user_id=session["user_id"])
+
+        return redirect("/")
+
+    # User reached route via GET (get to registration page)
+    else:
+        return render_template("reset.html")
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
