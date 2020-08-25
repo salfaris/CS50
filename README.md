@@ -1,6 +1,6 @@
 # CS50
 
-Problem Sets from the famous CS50x OpenCourseWare.
+My solutions to the problem sets of the famous CS50x OpenCourseWare.
 
 0. Scratch
 1. C
