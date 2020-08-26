@@ -2,7 +2,7 @@
 
 My solutions to the problem sets of the famous CS50x OpenCourseWare.
 
-Problem sets 1 through 6 are all written in C.
+Problem sets 1 through 5 are all written in C.
 
 - pset1 - hello, cash, credit, mario
 - pset2 - caesar, readability
